@@ -2,25 +2,57 @@ import os
 import sys
 
 # Get the directory of the current script
-current_dir = os.path.dirname(os.path.abspath(__file__))
 # If the script is not in the root directory, navigate to the root directory
-root_dir = os.path.dirname(current_dir)
 # Append the root directory to sys.path so that modules can be imported
+current_dir = os.path.dirname(os.path.abspath(__file__))
+root_dir = os.path.dirname(current_dir)
 sys.path.append(root_dir)
 
+from Analysis.errors import NoSuitablePairsError
 from Analysis.StockData import StockData
+from AidanUtils.formatting_and_logs import green_bold_print
+from AidanUtils.formatting_and_logs import CustomFormatter
+import logging
 
-SYMBOLS_LIST = ['XOM', 'CVX', 'BP', 'COP', 'PXD', 'EOG', 'APA', 'OXY', 'MPC', 'SLB', 'HAL', 'KMI', 'PBR', 'SU', 'ENB',
-                'EPD', 'EQT', 'BHP',
-                'FCX', 'NEM', 'GOLD', 'WPM', 'AGI', 'TECK', 'SBSW', 'CF', 'ADM', 'MOS', 'FMC', 'LIN', 'NUE', 'RGLD',
-                'WY', 'PAA', 'ET',
-                'MPLX',
-                'WMB', 'X', 'AA', 'CMP', 'IP', 'PKG', 'PPG']
+# Set up logging with custom formatter
+logging.basicConfig(level=logging.INFO)
+formatter = CustomFormatter('%(asctime)s - %(levelname)s - %(message)s')
+handler = logging.StreamHandler(sys.stdout)
+handler.setFormatter(formatter)
+logger = logging.getLogger()
+logger.handlers = [handler]
+
+
+def read_tickers_from_file(path):
+    try:
+        with open(path, 'r') as file:
+            return [ticker.strip() for ticker in file.read().split(',')]
+    except FileNotFoundError:
+        logging.error("File not found. Please try again.")
+        return None
+
+
+def process_stock_data(symbols_list):
+    try:
+        stock_data = StockData(asset_list=symbols_list)
+        green_bold_print("Most Suitable Pair: " + stock_data.most_suitable_pair)
+    except NoSuitablePairsError:
+        logging.warning("No suitable pairs found in the given list of tickers. Please try again.")
+    except Exception as e:
+        logging.error(f"An error occurred: {e}")
 
 
 def run():
-    stock_data = StockData(asset_list=SYMBOLS_LIST)
-    print(stock_data.co_int_correlation_combined_df)
+    while True:
+        green_bold_print("Ticker symbols list must be in a csv file.")
+        green_bold_print("Please enter a path to a csv file containing a list of ticker symbols:")
+        path = input()
+        symbols_list = read_tickers_from_file(path)
+
+        if symbols_list is not None:
+            logging.info("Tickers to analyse: " + str(symbols_list))
+            process_stock_data(symbols_list)
+            break
 
 
 if __name__ == '__main__':

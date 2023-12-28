@@ -1,6 +1,5 @@
 import os
 import sys
-import time
 
 import numpy as np
 import pandas as pd
@@ -16,7 +15,6 @@ root_dir = os.path.dirname(current_dir)
 sys.path.append(root_dir)
 
 from AidanUtils.MyTimer import timeit
-from AidanUtils.ProgressBar import print_progress_bar
 from Analysis.Dates import Dates
 
 
@@ -77,12 +75,8 @@ def adf_test(stock_1, stock_2) -> bool:
 def run_adf_on_best_pairs(highest_corr_pairs) -> list:
     # Running ADF test
     adf_list = []
-
-    print_progress_bar(0, total=len(highest_corr_pairs), length=50)
-
     for n in range(len(highest_corr_pairs)):
         result = adf_test(highest_corr_pairs['Stock_1'][n], highest_corr_pairs['Stock_2'][n])
         adf_list.append(result)
-        print_progress_bar(iteration=n + 1, total=len(highest_corr_pairs), length=50)
 
     return adf_list

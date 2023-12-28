@@ -13,9 +13,11 @@ root_dir = os.path.dirname(current_dir)
 sys.path.append(root_dir)
 
 from AidanUtils.MyTimer import timeit
-from AidanUtils.ProgressBar import print_progress_bar
 from Analysis import StatisticalMethods
 from Analysis.Dates import Dates
+from Analysis.errors import NoSuitablePairsError
+from AidanUtils.formatting_and_logs import blue_bold_print, green_bold_print
+
 
 pd.set_option('mode.chained_assignment', None)
 
@@ -34,7 +36,7 @@ class StockData:
 
     @timeit
     def download_stock_data(self, asset_list: list):
-        print("Starting data download...")
+        blue_bold_print("Starting data download...")
         # Setting dataset for the model
         end = Dates.END_DATE.value
         start = Dates.START_DATE.value
@@ -61,10 +63,8 @@ class StockData:
         n = len(df.columns)
         cointegrated_pairs_dict = {}
 
-        print_progress_bar(0, n, length=50)
         for i in range(n):
             for j in range(i + 1, n):
-                print_progress_bar(i + 1, n, length=50)
                 S1 = df.iloc[:, i]
                 S2 = df.iloc[:, j]
                 result = coint(S1, S2, trend="c", autolag="BIC")
@@ -87,6 +87,8 @@ class StockData:
     @timeit
     def find_most_suitable_pair(self):
         # Take the pair with the highest correlation in our dataset that meets our cointegration threshold
+        if len(self.co_int_correlation_combined_df) < 2:
+            raise NoSuitablePairsError
         stock_1 = self.co_int_correlation_combined_df.iloc[0, 0]
         stock_2 = self.co_int_correlation_combined_df.iloc[0, 1]
         print('Most Suitable Pair: ' + stock_1 + ' ' + stock_2)
