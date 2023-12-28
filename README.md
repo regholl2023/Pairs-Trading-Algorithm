@@ -88,7 +88,7 @@ The algorithm is configured to use my ALPACA paper account API key and secret.
 
 | File                                                                                               | Summary       |
 | ---                                                                                                | ---           |
-| [requirements.txt](https://github.com/AidanAlr/Pairs-Trading-Algorithm/blob/main/requirements.txt) | ► INSERT-TEXT |
+| [requirements.txt](https://github.com/AidanAlr/Pairs-Trading-Algorithm/blob/main/requirements.txt) | ► Requirements needed to run program, use "pip install -r requirements.txt" |
 
 </details>
 
@@ -96,10 +96,10 @@ The algorithm is configured to use my ALPACA paper account API key and secret.
 
 | File                                                                                                                  | Summary       |
 | ---                                                                                                                   | ---           |
-| [Visualisation.py](https://github.com/AidanAlr/Pairs-Trading-Algorithm/blob/main/Analysis/Visualisation.py)           | ► INSERT-TEXT |
-| [StockData.py](https://github.com/AidanAlr/Pairs-Trading-Algorithm/blob/main/Analysis/StockData.py)                   | ► INSERT-TEXT |
-| [Dates.py](https://github.com/AidanAlr/Pairs-Trading-Algorithm/blob/main/Analysis/Dates.py)                           | ► INSERT-TEXT |
-| [StatisticalMethods.py](https://github.com/AidanAlr/Pairs-Trading-Algorithm/blob/main/Analysis/StatisticalMethods.py) | ► INSERT-TEXT |
+| [Visualisation.py](https://github.com/AidanAlr/Pairs-Trading-Algorithm/blob/main/Analysis/Visualisation.py)           | ► Functions to visualise important metrics |
+| [StockData.py](https://github.com/AidanAlr/Pairs-Trading-Algorithm/blob/main/Analysis/StockData.py)                   | ► StockData class and methods |
+| [Dates.py](https://github.com/AidanAlr/Pairs-Trading-Algorithm/blob/main/Analysis/Dates.py)                           | ► Enum for dates |
+| [StatisticalMethods.py](https://github.com/AidanAlr/Pairs-Trading-Algorithm/blob/main/Analysis/StatisticalMethods.py) | ► Functions performing statisticaly analysis on StockData |
 
 </details>
 
@@ -107,7 +107,7 @@ The algorithm is configured to use my ALPACA paper account API key and secret.
 
 | File                                                                                                 | Summary       |
 | ---                                                                                                  | ---           |
-| [test_alpaca.py](https://github.com/AidanAlr/Pairs-Trading-Algorithm/blob/main/Tests/test_alpaca.py) | ► INSERT-TEXT |
+| [test_alpaca.py](https://github.com/AidanAlr/Pairs-Trading-Algorithm/blob/main/Tests/test_alpaca.py) | ► Testing the Alpaca Functions |
 
 </details>
 
@@ -115,8 +115,8 @@ The algorithm is configured to use my ALPACA paper account API key and secret.
 
 | File                                                                                                                 | Summary       |
 | ---                                                                                                                  | ---           |
-| [AnalysisExecutor.py](https://github.com/AidanAlr/Pairs-Trading-Algorithm/blob/main/Executors/AnalysisExecutor.py)   | ► INSERT-TEXT |
-| [AlgorithmExecutor.py](https://github.com/AidanAlr/Pairs-Trading-Algorithm/blob/main/Executors/AlgorithmExecutor.py) | ► INSERT-TEXT |
+| [AnalysisExecutor.py](https://github.com/AidanAlr/Pairs-Trading-Algorithm/blob/main/Executors/AnalysisExecutor.py)   | ► Executor for analysis |
+| [AlgorithmExecutor.py](https://github.com/AidanAlr/Pairs-Trading-Algorithm/blob/main/Executors/AlgorithmExecutor.py) | ► Executor for algorithm |
 
 </details>
 
@@ -192,7 +192,7 @@ python -m AlgorithmExecutor
 ### 🧪 Tests
 
 ```sh
-pytest
+
 ```
 
 ---
@@ -244,17 +244,6 @@ Once your PR is reviewed and approved, it will be merged into the main branch.
 </details>
 
 ---
-
-## 📄 License
-
-
-This project is protected under the [SELECT-A-LICENSE](https://choosealicense.com/licenses) License. For more details, refer to the [LICENSE](https://choosealicense.com/licenses/) file.
-
----
-
-## 👏 Acknowledgments
-
-- List any resources, contributors, inspiration, etc. here.
 
 [**Return**](#Top)
 
