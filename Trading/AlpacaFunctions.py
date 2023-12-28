@@ -38,6 +38,7 @@ def pause_algo(seconds):
 
 
 class Alpaca:
+
     """
     Alpaca class to manage trading activities.
     It handles connection to Alpaca API, managing positions, entering hedge positions,
