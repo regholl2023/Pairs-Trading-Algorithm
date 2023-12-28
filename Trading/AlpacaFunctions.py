@@ -246,23 +246,21 @@ class Alpaca:
         sl (float): Stop loss threshold percentage.
         """
 
-        def pause_monitor():
+        def exit_monitor():
             """
             Monitors for the user input to pause the algorithm.
             """
             while True:
                 user_input = input()  # Wait for user input
-                if user_input.lower() == 'pause':
+                if user_input.lower() == 'exit':
                     print("\nPausing algorithm...")
                     pause_algo(60)  # Call the pause_algo method
                     break
 
-        print("Take Profit: " + str(tp) + "%")
-        print("Stop Loss: " + str(abs(sl) * -1) + "%")
         self.print_positions()
 
         # Start the thread for monitoring pause input
-        pause_thread = threading.Thread(target=pause_monitor)
+        pause_thread = threading.Thread(target=exit_monitor)
         pause_thread.start()
 
         count = 0
