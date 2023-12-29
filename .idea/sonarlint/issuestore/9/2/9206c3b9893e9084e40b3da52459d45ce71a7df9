@@ -1,75 +1,0 @@
-
-„python:S1192Õ"lDefine a constant instead of duplicating this literal "*** YAHOO! FINANCE IS CURRENTLY DOWN! ***\n" 3 times.(Úì <
-jpython:S1192¦
-"LDefine a constant instead of duplicating this literal '1D change X' 3 times.(›™•éıÿÿÿÿ
-ipython:S1192Ö"KDefine a constant instead of duplicating this literal "Adj Close" 10 times.(Üš¶¤ıÿÿÿÿ
-ipython:S1192“"KDefine a constant instead of duplicating this literal "Week Start" 3 times.(šä ­ùÿÿÿÿ
-ipython:S1192ç"KDefine a constant instead of duplicating this literal "Repaired?" 27 times.(¬íşşÿÿÿÿ
-ipython:S1192¯"KDefine a constant instead of duplicating this literal 'Adj Close' 14 times.(Šš¯”üÿÿÿÿ
-hpython:S1192¨"JDefine a constant instead of duplicating this literal '1.0/split' 4 times.(³¤¨Úúÿÿÿÿ
-epython:S1192ü"MDefine a constant instead of duplicating this literal "Stock Splits" 9 times.(ûº‡
-cpython:S1192–"JDefine a constant instead of duplicating this literal "Day Start" 3 times.(æøºå
-lpython:S1192Ô"SDefine a constant instead of duplicating this literal "Will be right back" 3 times.(¡¡ı©
-fpython:S1192´"MDefine a constant instead of duplicating this literal 'Stock Splits' 8 times.(¶„€Ï
-gpython:S1192ƒ"NDefine a constant instead of duplicating this literal "Capital Gains" 9 times.(‚ïé¬
-hpython:S1192ú	"JDefine a constant instead of duplicating this literal 'Repaired?' 5 times.(Ş©Å¿ıÿÿÿÿ
-Mpython:S1066Ö"/Merge this if statement with the enclosing one.(ìé¡¥ùÿÿÿÿ
-~python:S4144Ü"eUpdate this function so that its implementation is not identical to get_recommendations on line 1697.(Ò÷•Š
-npython:S117—"VRename this local variable "endDt" to match the regular expression ^[_a-z][a-z0-9_]*$.(ÖºÃ
-upython:S117×"XRename this local variable "startDt" to match the regular expression ^[_a-z][a-z0-9_]*$.(‰¦áïşÿÿÿÿ
-hpython:S107T"LMethod "history" has 15 parameters, which is greater than the 13 authorized.(ï–¦Şøÿÿÿÿ
-rpython:S3776T"URefactor this function to reduce its Cognitive Complexity from 139 to the 15 allowed.(ï–¦Şøÿÿÿÿ
-Upython:S112›">Replace this generic exception class with a more specific one.(««á
-Upython:S112‹">Replace this generic exception class with a more specific one.(««á
-Upython:S112">Replace this generic exception class with a more specific one.(««á
-cpython:S3457Œ"EAdd replacement fields or use a normal string instead of an f-string.(½ÛÓ›üÿÿÿÿ
-[python:S112¦">Replace this generic exception class with a more specific one.(·İŠÚıÿÿÿÿ
-Ipython:S1481›"+Remove the unused local variable "last_dt".(üñ‘úÿÿÿÿ
-?python:S1481"&Remove the unused local variable "td".(¥£–£
-Jpython:S1481œ",Remove the unused local variable "last_ind".(ÇÓ»§ÿÿÿÿÿ
-Dpython:S1481Ì"+Remove the unused local variable "n_fixed".(åšßæ
-spython:S3776Å"URefactor this function to reduce its Cognitive Complexity from 187 to the 15 allowed.(±©…èÿÿÿÿÿ
-Vpython:S112Ê">Replace this generic exception class with a more specific one.(ÙÄı
-kpython:S6729Š"MUse "np.nonzero" when only the condition parameter is provided to "np.where".(™úÖµüÿÿÿÿ
-python:S1871×"cEither merge this branch with the identical one on line "597" or change one of the implementations.(Ò­ûÌùÿÿÿÿ
-kpython:S6729Ä"MUse "np.nonzero" when only the condition parameter is provided to "np.where".(ñ¢Íûÿÿÿÿ
-^python:S3457˜"EAdd replacement fields or use a normal string instead of an f-string.(óóÉŒ
-mpython:S1854"ORemove this assignment to local variable 'df2_tagged'; the value is never used.(ĞÍùÿÿÿÿ
-rpython:S3776Ç"TRefactor this function to reduce its Cognitive Complexity from 65 to the 15 allowed.(¶¥Š‘ÿÿÿÿÿ
-mpython:S3776è"TRefactor this function to reduce its Cognitive Complexity from 29 to the 15 allowed.(˜êøŸ
-Xpython:S1244‚":Do not perform equality checks with floating point values.(ĞÙçüÿÿÿÿ
-Xpython:S1244Œ":Do not perform equality checks with floating point values.(ĞÙçüÿÿÿÿ
-Spython:S1244•":Do not perform equality checks with floating point values.(Ëí™
-tpython:S117‡	"]Rename this local variable "Yahoo_failed" to match the regular expression ^[_a-z][a-z0-9_]*$.(¨¥Ç
-Rpython:S1244é":Do not perform equality checks with floating point values.(¯¦ş<
-fpython:S6729ô"MUse "np.nonzero" when only the condition parameter is provided to "np.where".(ñÂ…Ò
-_python:S1854Ë
-"FRemove this assignment to local variable 'r'; the value is never used.(şµôç
-python:S117Å"dRename this local variable "OHLC_correct_ranges" to match the regular expression ^[_a-z][a-z0-9_]*$.(ç¾¶·øÿÿÿÿ
-wpython:S117ÿ
-"ZRename this local variable "indices_A" to match the regular expression ^[_a-z][a-z0-9_]*$.(©¶áÃúÿÿÿÿ
-wpython:S117€"ZRename this local variable "indices_B" to match the regular expression ^[_a-z][a-z0-9_]*$.(¢æËóÿÿÿÿÿ
-Apython:S1481Ø	")Remove the unused local variable "OHLCA".(ô²æm
-npython:S3776Â	"URefactor this function to reduce its Cognitive Complexity from 272 to the 15 allowed.(ò¡å¸
-Xpython:S1244Ó	":Do not perform equality checks with floating point values.(ƒ¶§ÿÿÿÿÿ
-fpython:S6729ì	"MUse "np.nonzero" when only the condition parameter is provided to "np.where".(öå°Ô
-kpython:S6729î	"MUse "np.nonzero" when only the condition parameter is provided to "np.where".(Ñ‘¥±ûÿÿÿÿ
-Spython:S1244‡
-":Do not perform equality checks with floating point values.(Ä¢Âğ
-Spython:S1244‹
-":Do not perform equality checks with floating point values.(Ä¢Âğ
-Spython:S1244ı
-":Do not perform equality checks with floating point values.(õÑ Ã
-kpython:S6729ÿ
-"MUse "np.nonzero" when only the condition parameter is provided to "np.where".(©¶áÃúÿÿÿÿ
-kpython:S6729€"MUse "np.nonzero" when only the condition parameter is provided to "np.where".(¢æËóÿÿÿÿÿ
-^python:S3457"EAdd replacement fields or use a normal string instead of an f-string.(†‰®‚
-6python:S125’"Remove this commented out code.(˜õıh
-kpython:S6729¢"MUse "np.nonzero" when only the condition parameter is provided to "np.where".(ÍíË¿ÿÿÿÿÿ
-kpython:S6729È"MUse "np.nonzero" when only the condition parameter is provided to "np.where".(àˆ’‹ÿÿÿÿÿ
-Apython:S108ö")Either remove or fill this block of code.(ã‘Û¾
-kpython:S6729ú"MUse "np.nonzero" when only the condition parameter is provided to "np.where".(¶Ìù›øÿÿÿÿ
-kpython:S6729¢"MUse "np.nonzero" when only the condition parameter is provided to "np.where".(àˆ’‹ÿÿÿÿÿ
-Bpython:S1481±")Remove the unused local variable "end_d".(ˆíŞ
-Ipython:S1481­"+Remove the unused local variable "start_d".(ÎÑûıÿÿÿÿ
-rpython:S3776‘"TRefactor this function to reduce its Cognitive Complexity from 24 to the 15 allowed.(À¶ÉÏøÿÿÿÿ
