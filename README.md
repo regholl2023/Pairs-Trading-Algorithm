@@ -64,17 +64,17 @@ The algorithm is configured to use my ALPACA paper account API key and secret.
     │   ├── MyTimer.py
     │   ├── ProgressBar.py
     ├── Analysis/
-    │   ├── Dates.py
-    │   ├── StatisticalMethods.py
-    │   ├── StockData.py
-    │   ├── Visualisation.py
+    │   ├── DATES.py
+    │   ├── statistical_methods.py
+    │   ├── stock_data.py
+    │   ├── visualisation.py
     ├── Executors/
-    │   ├── AlgorithmExecutor.py
-    │   └── AnalysisExecutor.py
+    │   ├── alpaca_executor.py
+    │   └── analysis_executor.py
     ├── Tests/
     │   └── test_alpaca.py
     ├── Trading/
-    │   ├── AlpacaFunctions.py
+    │   ├── alpaca_functions.py
     └── requirements.txt
 
 ```

@@ -1,6 +1,8 @@
-import Executors.AnalysisExecutor
-from Trading.AlpacaFunctions import Alpaca
+import Executors.analysis_executor
+from Trading.alpaca_functions import Alpaca
 from AidanUtils.formatting_and_logs import green_bold_print
+from Executors import analysis_executor
+from Executors import alpaca_executor
 
 
 while True:
@@ -9,15 +11,13 @@ while True:
         green_bold_print("2: Current Positions - Live Portfolio")
         green_bold_print("3: Enter New Hedge Position")
         choice = input("Please select an option: ")
-
         if choice not in ["1", "2", "3"]:
             raise ValueError
         elif choice == "1":
-            Executors.AnalysisExecutor.run()
+            analysis_executor.run()
         elif choice == "2":
             green_bold_print("Current Positions - Live Portfolio")
-            alpaca = Alpaca()
-            alpaca.use_live_tp_sl(5, 5)
+            alpaca_executor.execute_algo(tp=5, sl=5)
         elif choice == "3":
             green_bold_print("Enter New Hedge Position Selected")
             alpaca = Alpaca()

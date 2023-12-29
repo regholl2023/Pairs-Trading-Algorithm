@@ -9,7 +9,7 @@ root_dir = os.path.dirname(current_dir)
 sys.path.append(root_dir)
 
 from Analysis.errors import NoSuitablePairsError
-from Analysis.StockData import StockData
+from Analysis.stock_data import StockData
 from AidanUtils.formatting_and_logs import green_bold_print
 from AidanUtils.formatting_and_logs import CustomFormatter
 import logging

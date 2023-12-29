@@ -1,12 +1,15 @@
 
-
 import unittest
 
 import numpy as np
 import pandas as pd
 
-from Analysis.StatisticalMethods import collect_metrics_for_pair
+from Analysis.statistical_methods import collect_metrics_for_pair
 import warnings
+
+
+def check_if_result_is_dataframe(result):
+    assert isinstance(result, pd.DataFrame), "result is not a DataFrame"
 
 
 class TestCollectMetricsForPair(unittest.TestCase):
@@ -40,29 +43,29 @@ class TestCollectMetricsForPair(unittest.TestCase):
     #  The function should handle cases where the downloaded stock data has missing values.
     def test_missing_stock_data(self):
         result = collect_metrics_for_pair(self.stock_1, self.stock_2)
-        assert isinstance(result, pd.DataFrame), "result is not a DataFrame"
+        check_if_result_is_dataframe(result)
         assert not result.isnull().values.any(), "result contains NaN values"
 
     #  The function should handle cases where the calculated hedge ratio is infinite or NaN.
     def test_infinite_hedge_ratio(self):
         result = collect_metrics_for_pair(self.stock_1, self.stock_2)
-        assert isinstance(result, pd.DataFrame), "result is not a DataFrame"
+        check_if_result_is_dataframe(result)
         assert not result.isin([np.inf, -np.inf, np.nan]).values.any(), "result contains infinite or NaN values"
 
     #  The function should calculate the spread of stock 1 and stock 2 price.
     def test_calculate_spread(self):
         result = collect_metrics_for_pair(self.stock_1, self.stock_2)
-        assert isinstance(result, pd.DataFrame), "result is not a DataFrame"
+        check_if_result_is_dataframe(result)
         assert 'spread' in result.columns, "spread not found in columns"
 
     #  The function should calculate the rolling correlation test.
     def test_calculate_rolling_correlation(self):
         result = collect_metrics_for_pair(self.stock_1, self.stock_2)
-        assert isinstance(result, pd.DataFrame), "result is not a DataFrame"
+        check_if_result_is_dataframe(result)
         assert 'roll_corr' in result.columns, "roll_corr not found in columns"
 
     #  The function should calculate the z-score.
     def test_calculate_z_score(self):
         result = collect_metrics_for_pair(self.stock_1, self.stock_2)
-        assert isinstance(result, pd.DataFrame), "result is not a DataFrame"
+        check_if_result_is_dataframe(result)
         assert 'z_score' in result.columns, "z_score not found in columns"
