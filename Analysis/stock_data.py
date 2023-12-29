@@ -5,39 +5,37 @@ import pandas as pd
 import yfinance as yf
 from statsmodels.tsa.stattools import coint
 
-# Get the directory of the current script
-# If the script is not in the root directory, navigate to the root directory
-# Append the root directory to sys.path so that modules can be imported
+# Directory Path Setup
+""" Set up the directory path for the script and adjust sys.path for module imports. """
 current_dir = os.path.dirname(os.path.abspath(__file__))
 root_dir = os.path.dirname(current_dir)
 sys.path.append(root_dir)
 
+# Custom Module Imports
 from AidanUtils.MyTimer import timeit
-from Analysis import StatisticalMethods
-from Analysis.Dates import Dates
+from Analysis.DATES import Dates
 from Analysis.errors import NoSuitablePairsError
 from AidanUtils.formatting_and_logs import blue_bold_print, green_bold_print
-
+from Analysis.statistical_methods import run_adf_on_best_pairs
 
 pd.set_option('mode.chained_assignment', None)
 
 
 class StockData:
+    """ A class for managing and analyzing stock data. """
+
     def __init__(self, asset_list):
+        """ Initializes the StockData object by downloading stock data, finding high correlation and cointegrated pairs, and determining the most suitable pair for analysis. """
         self.price_history_df = self.download_stock_data(asset_list)
         self.highest_corr_pairs_df = self.find_highest_corr_pairs(self.price_history_df)
         self.co_integrated_pairs_df = self.find_cointegrated_pairs(self.price_history_df, p_value_thresh=0.05)
-        self.co_int_correlation_combined_df = self.combine_cointegration_correlation()
-
-        # Adding the results of AD fuller to pairs_df
-        self.co_int_correlation_combined_df['adf_test'] = StatisticalMethods.run_adf_on_best_pairs(
-            self.co_int_correlation_combined_df)
+        self.co_int_correlation_combined_df = self.combine_cointegration_correlation_adf()
         self.most_suitable_pair = self.find_most_suitable_pair()
 
     @timeit
     def download_stock_data(self, asset_list: list):
+        """ Downloads the historical adjusted close prices of the stocks in the given asset list. """
         blue_bold_print("Starting data download...")
-        # Setting dataset for the model
         end = Dates.END_DATE.value
         start = Dates.START_DATE.value
         prices_df = yf.download(tickers=asset_list, start=start, end=end)['Adj Close']
@@ -46,7 +44,7 @@ class StockData:
 
     @timeit
     def find_highest_corr_pairs(self, df):
-        # Finding the highest correlation pairs
+        """ Identifies the highest correlation pairs from the given DataFrame. """
         corr_matrix = df.corr().abs()
         cmu = corr_matrix.unstack()
         cmu = cmu[cmu != 1]
@@ -60,6 +58,7 @@ class StockData:
 
     @timeit
     def find_cointegrated_pairs(self, df, p_value_thresh):
+        """ Finds cointegrated pairs of stocks within a given DataFrame based on a specified p-value threshold. """
         n = len(df.columns)
         cointegrated_pairs_dict = {}
 
@@ -78,15 +77,17 @@ class StockData:
         return cointegrated_pairs_df
 
     @timeit
-    def combine_cointegration_correlation(self) -> pd.DataFrame:
-        # Merge df of coint pairs above the threshold with df of highest correlation pairs
+    def combine_cointegration_correlation_adf(self) -> pd.DataFrame:
+        """ Combines cointegration and correlation data into a single DataFrame. """
         coint_corr_data = self.highest_corr_pairs_df.merge(self.co_integrated_pairs_df, left_on='lookup',
                                                            right_on=self.co_integrated_pairs_df.index)
+        coint_corr_data['adf_test'] = run_adf_on_best_pairs(coint_corr_data)
         return coint_corr_data
 
     @timeit
     def find_most_suitable_pair(self):
-        # Take the pair with the highest correlation in our dataset that meets our cointegration threshold
+        """ Identifies the most suitable stock pair based on highest correlation and cointegration criteria. Raises
+        an error if no suitable pairs are found."""
         if len(self.co_int_correlation_combined_df) < 2:
             raise NoSuitablePairsError
         stock_1 = self.co_int_correlation_combined_df.iloc[0, 0]

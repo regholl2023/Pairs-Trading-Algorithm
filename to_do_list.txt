@@ -1,0 +1,5 @@
+Add new controls to CLI
+Ability to enter more than one position at a time
+Manually close a position
+Ability to auto enter a position in all sufficient pairs
+Filter for pairs that are most suitable

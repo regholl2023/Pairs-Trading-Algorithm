@@ -8,7 +8,7 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 root_dir = os.path.dirname(current_dir)
 sys.path.append(root_dir)
 
-from Trading.AlpacaFunctions import Alpaca
+from Trading.alpaca_functions import Alpaca
 
 
 def execute_algo(tp, sl):
@@ -16,4 +16,3 @@ def execute_algo(tp, sl):
     alpaca.use_live_tp_sl(tp, sl)
 
 
-execute_algo(5, 5)
