@@ -4,6 +4,7 @@ import pandas as pd
 from Analysis.statistical_methods import collect_metrics_for_pair
 import warnings
 
+no_df_result = "result is not a DataFrame"
 
 class TestCollectMetricsForPair(unittest.TestCase):
     @classmethod
@@ -25,23 +26,23 @@ class TestCollectMetricsForPair(unittest.TestCase):
         assert 'hedge_ratio' in self.metrics.columns, "hedge_ratio not found in columns"
 
     def test_missing_stock_data(self):
-        assert isinstance(self.metrics, pd.DataFrame), "result is not a DataFrame"
+        assert isinstance(self.metrics, pd.DataFrame), no_df_result
         assert not self.metrics.isnull().values.any(), "result contains NaN values"
 
     def test_infinite_hedge_ratio(self):
-        assert isinstance(self.metrics, pd.DataFrame), "result is not a DataFrame"
+        assert isinstance(self.metrics, pd.DataFrame), no_df_result
         assert not self.metrics.isin([np.inf, -np.inf, np.nan]).values.any(), "result contains infinite or NaN values"
 
     def test_calculate_spread(self):
-        assert isinstance(self.metrics, pd.DataFrame), "result is not a DataFrame"
+        assert isinstance(self.metrics, pd.DataFrame), no_df_result
         assert 'spread' in self.metrics.columns, "spread not found in columns"
 
     def test_calculate_rolling_correlation(self):
-        assert isinstance(self.metrics, pd.DataFrame), "result is not a DataFrame"
+        assert isinstance(self.metrics, pd.DataFrame), no_df_result
         assert 'roll_corr' in self.metrics.columns, "roll_corr not found in columns"
 
     def test_calculate_z_score(self):
-        assert isinstance(self.metrics, pd.DataFrame), "result is not a DataFrame"
+        assert isinstance(self.metrics, pd.DataFrame), no_df_result
         assert 'z_score' in self.metrics.columns, "z_score not found in columns"
 
 
