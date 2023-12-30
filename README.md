@@ -141,16 +141,6 @@ The algorithm is configured to use my ALPACA paper account API key and secret.
 
 ## 🚀 Getting Started
 
-***Dependencies***
-
-Please ensure you have the following dependencies installed on your system:
-
-`- ℹ️ pandas`
-
-`- ℹ️ numpy`
-
-`- ℹ️ scikit-learn`
-
 ### 🔧 Installation
 
 1. Clone the Pairs-Trading-Algorithm repository:
