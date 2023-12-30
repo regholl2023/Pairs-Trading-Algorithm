@@ -2,8 +2,9 @@ import os
 import sys
 import threading
 import time
+import logging
 
-from AidanUtils.formatting_and_logs import green_bold_print
+from AidanUtils.formatting_and_logs import green_bold_print, red_bold_print
 
 # Get the directory of the current script
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -21,6 +22,9 @@ from AidanUtils.MyTimer import timeit
 
 os.environ['APCA_API_BASE_URL'] = 'https://paper-api.alpaca.markets'
 
+# Configure the logging; you can adjust the level and format as needed
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
 
 def connect_to_trading_stream():
     """
@@ -29,8 +33,8 @@ def connect_to_trading_stream():
     """
     try:
         return TradingStream("PKNWSWFGL7X6F50PJ8UH", "1qpcAmhEmzxONh3Im0V6lzgqtVOX2xD3k7mViYLX", paper=True)
-    except Exception:
-        print("Error getting trade stream")
+    except Exception as e:
+        logging.error(e)
 
 
 def pause_algo(seconds):
@@ -40,7 +44,6 @@ def pause_algo(seconds):
 
 
 class Alpaca:
-
     """
     Alpaca class to manage trading activities.
     It handles connection to Alpaca API, managing positions, entering hedge positions,
@@ -60,7 +63,6 @@ class Alpaca:
         self.in_position = bool(self.client.get_all_positions())
         self.positions = self.client.get_all_positions()
 
-    @timeit
     def connect_to_alpaca(self, api_key: str, api_secret: str, paper: bool) -> TradingClient:
         """
         Establishes a connection to the Alpaca trading service using API credentials.
@@ -78,32 +80,36 @@ class Alpaca:
         try:
             trading_client = TradingClient(api_key, api_secret, paper=paper)
             self.account = trading_client.get_account()
-            print('Connected to Alpaca, buying power is: ' + self.account.buying_power)
+            logging.info('Connected to Alpaca, buying power is: $' + self.account.buying_power)
             self.connected = True
             return trading_client
 
-        except Exception:
-            print("Error connecting to Alpaca")
+        except Exception as e:
+            logging.error(e)
 
     def send_market_order(self, symbol: str, qty: int | float, side: OrderSide | str):
         """
-        Sends a market order to the Alpaca API.
+        Send a market order to the Alpaca API
 
         Args:
         symbol (str): Symbol of the stock to trade.
         qty (int): Quantity of the stock to trade.
-        side (OrderSide | str): Side of the order, either 'buy' or 'sell'.
+        side (OrderSide): Side of the order, either 'buy' or 'sell'.
+
         """
         try:
+            print(self.client)
+            print(self.connected)
             self.client.submit_order(
                 order_data=MarketOrderRequest(
                     symbol=symbol,
                     qty=qty,
                     side=side,
+                    time_in_force=TimeInForce.DAY
                 ))
             green_bold_print("Market order executed for {} shares of {}".format(qty, symbol))
-        except Exception:
-            print("Error sending order")
+        except Exception as e:
+            print(e)
 
     def send_limit_order(self, symbol: str, qty: int | float, side: OrderSide | str, limit_price: float, **kwargs):
         """
@@ -128,11 +134,12 @@ class Alpaca:
                     limit_price=limit_price,
                     take_profit=kwargs.get('take_profit', None),
                     stop_loss=kwargs.get('stop_loss', None),
+                    time_in_force=TimeInForce.DAY
                 ))
             green_bold_print("Limit order placed for {} shares of {} at {}".format(qty, symbol, limit_price))
 
-        except Exception:
-            print("Error sending order")
+        except Exception as e:
+            red_bold_print(e)
 
     def enter_hedge_position(self, stock_1, stock_2, side, leverage, hr):
         """
@@ -171,8 +178,8 @@ class Alpaca:
                 ))
             print(stock_2 + ' ' + stock_2_side + ' order executed')
 
-        except Exception:
-            print("Error entering hedge position")
+        except Exception as e:
+            print(e)
 
     def get_positions_dict(self):
         if self.in_position:

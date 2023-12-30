@@ -1,6 +1,6 @@
 import Executors.analysis_executor
 from Trading.alpaca_functions import Alpaca
-from AidanUtils.formatting_and_logs import green_bold_print, blue_bold_print
+from AidanUtils.formatting_and_logs import green_bold_print, blue_bold_print, red_bold_print
 from Executors import analysis_executor
 from Executors import alpaca_executor
 
@@ -19,7 +19,7 @@ def main():
     while True:
         try:
             choice = main_menu()
-            if choice not in ["1", "2", "3"]:
+            if choice not in ["1", "2", "3", "4"]:
                 raise ValueError
             elif choice == "1":
                 analysis_executor.run_analysis()
@@ -30,8 +30,7 @@ def main():
             elif choice == "4":
                 alpaca_executor.manual_trade_menu(alpaca_connection)
         except ValueError:
-            green_bold_print("Invalid input")
-            continue
+            red_bold_print("Invalid input")
         except Exception as e:
             print(e)
 

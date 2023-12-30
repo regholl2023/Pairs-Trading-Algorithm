@@ -16,6 +16,10 @@ def blue_bold_print(message):
     print(f"{BLUE}{BOLD}{message}{RESET}")
 
 
+def red_bold_print(message):
+    print(f"{RED}{BOLD}{message}{RESET}")
+
+
 # Custom formatter to add escape codes based on log level
 class CustomFormatter(logging.Formatter):
     def format(self, record):

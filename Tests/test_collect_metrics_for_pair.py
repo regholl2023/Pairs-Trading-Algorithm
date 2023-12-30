@@ -10,7 +10,7 @@ class TestCollectMetricsForPair(unittest.TestCase):
     def setUpClass(cls):
         cls.stock_1 = 'AAPL'
         cls.stock_2 = 'MSFT'
-        cls.metrics = collect_metrics_for_pair(cls.stock_1, cls.stock_2)
+        cls.metrics = collect_metrics_for_pair('AAPL', 'MSFT')
         warnings.filterwarnings("ignore")
 
     def test_download_stock_data(self):
