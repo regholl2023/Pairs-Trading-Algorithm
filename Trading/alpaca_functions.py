@@ -3,6 +3,8 @@ import sys
 import threading
 import time
 
+from AidanUtils.formatting_and_logs import green_bold_print
+
 # Get the directory of the current script
 current_dir = os.path.dirname(os.path.abspath(__file__))
 # If the script is not in the root directory, navigate to the root directory
@@ -11,9 +13,9 @@ root_dir = os.path.dirname(current_dir)
 sys.path.append(root_dir)
 
 import pandas as pd
-from alpaca.trading import OrderSide, TimeInForce, PositionSide
+from alpaca.trading import OrderSide, TimeInForce, PositionSide, Position
 from alpaca.trading.client import TradingClient
-from alpaca.trading.requests import MarketOrderRequest
+from alpaca.trading.requests import MarketOrderRequest, LimitOrderRequest
 from alpaca.trading.stream import TradingStream
 from AidanUtils.MyTimer import timeit
 
@@ -79,8 +81,58 @@ class Alpaca:
             print('Connected to Alpaca, buying power is: ' + self.account.buying_power)
             self.connected = True
             return trading_client
+
         except Exception:
             print("Error connecting to Alpaca")
+
+    def send_market_order(self, symbol: str, qty: int | float, side: OrderSide | str):
+        """
+        Sends a market order to the Alpaca API.
+
+        Args:
+        symbol (str): Symbol of the stock to trade.
+        qty (int): Quantity of the stock to trade.
+        side (OrderSide | str): Side of the order, either 'buy' or 'sell'.
+        """
+        try:
+            self.client.submit_order(
+                order_data=MarketOrderRequest(
+                    symbol=symbol,
+                    qty=qty,
+                    side=side,
+                ))
+            green_bold_print("Market order executed for {} shares of {}".format(qty, symbol))
+        except Exception:
+            print("Error sending order")
+
+    def send_limit_order(self, symbol: str, qty: int | float, side: OrderSide | str, limit_price: float, **kwargs):
+        """
+        Sends a limit order to the Alpaca API.
+
+        Args:
+        symbol (str): Symbol of the stock to trade.
+        qty (int): Quantity of the stock to trade.
+        side (OrderSide): Side of the order, either 'buy' or 'sell'.
+        limit_price (float): Limit price of the order.
+        **kwargs:
+            Optional arguments for take profit. Must specify take_profit=TP_PRICE.
+            Optional arguments for stop loss. Must specify stop_loss=SL_PRICE.
+
+        """
+        try:
+            self.client.submit_order(
+                order_data=LimitOrderRequest(
+                    symbol=symbol,
+                    qty=qty,
+                    side=side,
+                    limit_price=limit_price,
+                    take_profit=kwargs.get('take_profit', None),
+                    stop_loss=kwargs.get('stop_loss', None),
+                ))
+            green_bold_print("Limit order placed for {} shares of {} at {}".format(qty, symbol, limit_price))
+
+        except Exception:
+            print("Error sending order")
 
     def enter_hedge_position(self, stock_1, stock_2, side, leverage, hr):
         """
@@ -95,10 +147,8 @@ class Alpaca:
         hr (float): Hedge ratio to calculate the quantity of the second stock.
         """
         if side == "buy":
-            stock_1_side = OrderSide.BUY
             stock_2_side = OrderSide.SELL
         elif side == "sell":
-            stock_1_side = OrderSide.SELL
             stock_2_side = OrderSide.BUY
 
         try:
@@ -107,10 +157,10 @@ class Alpaca:
                 order_data=MarketOrderRequest(
                     symbol=stock_1,
                     qty=1 * leverage,
-                    side=stock_1_side,
+                    side=side,
                     time_in_force=TimeInForce.DAY
                 ))
-            print(stock_1 + ' ' + stock_1_side + ' order executed')
+            print(stock_1 + ' ' + side + ' order executed')
 
             self.client.submit_order(
                 order_data=MarketOrderRequest(
@@ -123,6 +173,34 @@ class Alpaca:
 
         except Exception:
             print("Error entering hedge position")
+
+    def get_positions_dict(self):
+        if self.in_position:
+            return self.client.get_all_positions()
+
+    def get_open_position_for_symbol(self, symbol_or_asset_id) -> Position:
+        """
+        Get the open position for a symbol or asset ID.
+
+        Args:
+            symbol_or_asset_id: The symbol or asset ID to get the open position for.
+
+        Returns:
+            The open position for the symbol or asset ID.
+        """
+        return self.client.get_open_position(symbol_or_asset_id=symbol_or_asset_id)
+
+    def close_position_for_symbol(self, symbol_or_asset_id):
+        """
+        Close a position for a symbol or asset ID.
+
+        Args:
+            symbol_or_asset_id: The symbol or asset ID to close the position for.
+
+        Returns:
+            The closed position for the symbol or asset ID.
+        """
+        return self.client.close_position(symbol_or_asset_id=symbol_or_asset_id)
 
     def get_positions_df(self):
         """
@@ -187,7 +265,7 @@ class Alpaca:
         except Exception:
             pass
 
-    def take_profit(self, tp):
+    def check_and_take_profit(self, tp):
         """
         Executes orders to take profit if the unrealized profit percentage exceeds the specified threshold.
 
@@ -201,7 +279,7 @@ class Alpaca:
             if self.close_all_positions():
                 print("Took profit")
 
-    def stop_loss(self, sl):
+    def check_and_stop_loss(self, sl):
         """
         Executes stop loss orders if the unrealized loss exceeds the specified threshold.
 
@@ -266,8 +344,8 @@ class Alpaca:
         count = 0
         while pause_thread.is_alive():  # Continue while the pause thread is running
             output = f'{count} Current Profit: {self.get_unrealised_profit_pc()} %' + ' | Type "pause" to pause for 60s:'
-            self.stop_loss(sl)
-            self.take_profit(tp)
+            self.check_and_stop_loss(sl)
+            self.check_and_take_profit(tp)
             sys.stdout.write("\r" + output)  # Overwrite the line with padding
             time.sleep(5)
             sys.stdout.flush()

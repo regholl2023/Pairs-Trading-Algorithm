@@ -1,6 +1,8 @@
 import os
 import sys
 
+from Executors.cli_controller import main_menu
+
 # Get the directory of the current script
 # If the script is not in the root directory, navigate to the root directory
 # Append the root directory to sys.path so that modules can be imported
@@ -10,7 +12,7 @@ sys.path.append(root_dir)
 
 from Analysis.errors import NoSuitablePairsError
 from Analysis.stock_data import StockData
-from AidanUtils.formatting_and_logs import green_bold_print
+from AidanUtils.formatting_and_logs import green_bold_print, blue_bold_print
 from AidanUtils.formatting_and_logs import CustomFormatter
 import logging
 
@@ -42,11 +44,13 @@ def process_stock_data(symbols_list):
         logging.error(f"An error occurred: {e}")
 
 
-def run():
+def run_analysis():
     while True:
-        green_bold_print("Ticker symbols list must be in a csv file.")
-        green_bold_print("Please enter a path to a csv file containing a list of ticker symbols:")
+        blue_bold_print("Ticker symbols list must be in a csv file.")
+        blue_bold_print("Please enter a path to a csv file containing a list of ticker symbols or enter b to go back:")
         path = input()
+        if path == 'b':
+            main_menu()
         symbols_list = read_tickers_from_file(path)
 
         if symbols_list is not None:
@@ -56,4 +60,4 @@ def run():
 
 
 if __name__ == '__main__':
-    run()
+    run_analysis()
