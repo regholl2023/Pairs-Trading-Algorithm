@@ -63,21 +63,27 @@ The algorithm is configured to use my ALPACA paper account API key and secret.
     ├── AidanUtils/
     │   ├── MyTimer.py
     │   ├── ProgressBar.py
+    │   ├── formatting_and_logs.py
     ├── Analysis/
     │   ├── DATES.py
+    │   ├── errors.py
     │   ├── statistical_methods.py
     │   ├── stock_data.py
-    │   ├── visualisation.py
+    │   └── visualisation.py
     ├── Executors/
     │   ├── alpaca_executor.py
-    │   └── analysis_executor.py
+    │   ├── analysis_executor.py
+    │   └── cli_controller.py
     ├── Tests/
-    │   └── test_alpaca.py
+    │   ├── test_alpaca.py
+    │   └── test_collect_metrics_for_pair.py
     ├── Trading/
-    │   ├── alpaca_functions.py
-    └── requirements.txt
+    │   └── alpaca_functions.py
+    ├── requirements.txt
+    └── to_do_list.txt
 
 ```
+
 
 ---
 
