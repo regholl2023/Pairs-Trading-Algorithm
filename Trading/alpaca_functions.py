@@ -94,12 +94,10 @@ class Alpaca:
         Args:
         symbol (str): Symbol of the stock to trade.
         qty (int): Quantity of the stock to trade.
-        side (OrderSide): Side of the order, either 'buy' or 'sell'.
+        side (OrderSide | str): Side of the order, either 'buy' or 'sell'.
 
         """
         try:
-            print(self.client)
-            print(self.connected)
             self.client.submit_order(
                 order_data=MarketOrderRequest(
                     symbol=symbol,
@@ -107,7 +105,7 @@ class Alpaca:
                     side=side,
                     time_in_force=TimeInForce.DAY
                 ))
-            green_bold_print("Market order executed for {} shares of {}".format(qty, symbol))
+            green_bold_print("{} market order executed for {} shares of {}".format(side, qty, symbol))
         except Exception as e:
             print(e)
 
@@ -136,7 +134,7 @@ class Alpaca:
                     stop_loss=kwargs.get('stop_loss', None),
                     time_in_force=TimeInForce.DAY
                 ))
-            green_bold_print("Limit order placed for {} shares of {} at {}".format(qty, symbol, limit_price))
+            logging.info("Limit order placed for {} shares of {} at {}".format(qty, symbol, limit_price))
 
         except Exception as e:
             red_bold_print(e)
@@ -153,31 +151,16 @@ class Alpaca:
         leverage (float): Leverage factor to apply to the order quantity.
         hr (float): Hedge ratio to calculate the quantity of the second stock.
         """
+        stock_2_side = None
         if side == "buy":
             stock_2_side = OrderSide.SELL
         elif side == "sell":
             stock_2_side = OrderSide.BUY
 
         try:
-            # Placing market orders for both stocks
-            self.client.submit_order(
-                order_data=MarketOrderRequest(
-                    symbol=stock_1,
-                    qty=1 * leverage,
-                    side=side,
-                    time_in_force=TimeInForce.DAY
-                ))
-            print(stock_1 + ' ' + side + ' order executed')
-
-            self.client.submit_order(
-                order_data=MarketOrderRequest(
-                    symbol=stock_2,
-                    qty=round(hr * leverage),
-                    side=stock_2_side,
-                    time_in_force=TimeInForce.DAY
-                ))
-            print(stock_2 + ' ' + stock_2_side + ' order executed')
-
+            self.send_market_order(stock_1, leverage, side)
+            self.send_market_order(stock_2, round(hr * leverage, 2), stock_2_side)
+            red_bold_print("Hedge position filled!")
         except Exception as e:
             print(e)
 
@@ -321,6 +304,58 @@ class Alpaca:
             else:
                 return False
 
+    def live_profit_monitor(self):
+        """
+        Continuously monitors the portfolio for profit percentage.
+        Prints the current unrealized profit percentage and executes orders if conditions are met.
+        """
+
+        def format_dataframe_as_table(df):
+            """
+            Formats the pandas DataFrame as a table for console display.
+            """
+            if df.empty:
+                return "No data available"
+
+            # Convert DataFrame to a string with uniform spacing between columns
+            df_string = df.to_string(index=False, header=False)
+
+            # Preparing header and separator
+            header = " | ".join(df.columns)
+            separator = "-+-".join(['-' * len(col) for col in df.columns])
+
+            # Assembling the table
+            return f"{header}\n{separator}\n{df_string}"
+
+        count = 0
+        last_output_length = 0  # Tracks the length of the last output
+        while True:
+            try:
+                # Fetch the latest profit percentage and positions data
+                profit_pc = self.get_unrealised_profit_pc()
+                positions_df = self.get_positions_df()
+
+                # Format the DataFrame as a table
+                table = format_dataframe_as_table(positions_df)
+
+                # Construct the output string
+                output = f'{count} Total Profit: {profit_pc} %\n\n{table}'
+                output += ' ' * (last_output_length - len(output))  # Pad the output to cover old message
+
+                # Clear the console and print the output
+                sys.stdout.write('\r' + output)
+                sys.stdout.flush()
+
+                last_output_length = len(output)  # Update the length of the last output
+
+            except Exception as e:
+                print(f"\nAn error occurred: {e}")
+                break  # Break the loop in case of an error
+
+            # Wait for a specified time before the next update
+            time.sleep(5)
+            count += 1
+
     def use_live_tp_sl(self, tp: int | float, sl: int | float):
         """
         Continuously monitors the portfolio for take profit (tp) or stop loss (sl) conditions.
@@ -331,32 +366,14 @@ class Alpaca:
         sl (float): Stop loss threshold percentage.
         """
 
-        def exit_monitor():
-            """
-            Monitors for the user input to pause the algorithm.
-            """
-            while True:
-                user_input = input()  # Wait for user input
-                if user_input.lower() == 'exit':
-                    print("\nPausing algorithm...")
-                    pause_algo(60)  # Call the pause_algo method
-                    break
-
         self.print_positions()
-
-        # Start the thread for monitoring pause input
-        pause_thread = threading.Thread(target=exit_monitor)
-        pause_thread.start()
-
         count = 0
-        while pause_thread.is_alive():  # Continue while the pause thread is running
-            output = f'{count} Current Profit: {self.get_unrealised_profit_pc()} %' + ' | Type "pause" to pause for 60s:'
+        while True:
+            # Continue while the pause thread is running
+            output = f'{count} Current Profit: {self.get_unrealised_profit_pc()} %'
             self.check_and_stop_loss(sl)
             self.check_and_take_profit(tp)
             sys.stdout.write("\r" + output)  # Overwrite the line with padding
             time.sleep(5)
             sys.stdout.flush()
             count += 1
-
-        # Optional: Wait for the pause thread to finish if needed
-        pause_thread.join()

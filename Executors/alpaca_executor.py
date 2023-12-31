@@ -16,7 +16,7 @@ from Trading.alpaca_functions import Alpaca
 def live_position_menu(alpaca: Alpaca):
     try:
         blue_bold_print("Current Positions - Live Portfolio")
-        alpaca.use_live_tp_sl(5, 5)
+        alpaca.live_profit_monitor()
     except Exception as e:
         print(e)
 
@@ -69,9 +69,13 @@ def enter_new_hedge_position_menu(alpaca: Alpaca):
         blue_bold_print("Enter New Hedge Position Selected")
         blue_bold_print("Please enter the pair you would like to trade as: stock_1, stock_2 ")
         pair_input = input()
-        pair_list = pair_input.split(',')
-        hr = input("Please enter the hedge ratio: ")
-        leverage = input("Please enter the leverage: ")
-        alpaca.enter_hedge_position(pair_list[0], pair_list[1], side="buy", hr=hr, leverage=leverage)
+        pair_list = [pair.strip() for pair in pair_input.split(',')]
+        hr = float(input("Please enter the hedge ratio i.e quantity of stock_2 relative to stock_1: "))
+        leverage = float(input("Please enter the leverage: "))
+        side = input("Please enter the side (buy/sell): ")
+        if side == "buy":
+            alpaca.enter_hedge_position(pair_list[0], pair_list[1], side="buy", hr=hr, leverage=leverage)
+        elif side == "sell":
+            alpaca.enter_hedge_position(pair_list[0], pair_list[1], side="sell", hr=hr, leverage=leverage)
     except Exception as e:
         print(e)
