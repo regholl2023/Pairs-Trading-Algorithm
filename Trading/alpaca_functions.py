@@ -328,33 +328,24 @@ class Alpaca:
             return f"{header}\n{separator}\n{df_string}"
 
         count = 0
-        last_output_length = 0  # Tracks the length of the last output
+
+        BLUE_BOLD = '\033[94m\033[1m'
+        RESET = '\033[0m'
+
         while True:
             try:
-                # Fetch the latest profit percentage and positions data
-                profit_pc = self.get_unrealised_profit_pc()
-                positions_df = self.get_positions_df()
-
                 # Format the DataFrame as a table
-                table = format_dataframe_as_table(positions_df)
-
-                # Construct the output string
-                output = f'{count} Total Profit: {profit_pc} %\n\n{table}'
-                output += ' ' * (last_output_length - len(output))  # Pad the output to cover old message
-
-                # Clear the console and print the output
-                sys.stdout.write('\r' + output)
+                table = format_dataframe_as_table(self.get_positions_df())
+                output = f'{count} Current Profit: {self.get_unrealised_profit_pc()} %'
+                sys.stdout.write("\r" + output + " -> Positions: ")  # Overwrite the line with padding
+                sys.stdout.write(table)  # Overwrite the line with padding
+                time.sleep(5)
+                count += 1
                 sys.stdout.flush()
 
-                last_output_length = len(output)  # Update the length of the last output
-
             except Exception as e:
-                print(f"\nAn error occurred: {e}")
-                break  # Break the loop in case of an error
-
-            # Wait for a specified time before the next update
-            time.sleep(5)
-            count += 1
+                print(f"An error occurred: {e}")
+                break
 
     def use_live_tp_sl(self, tp: int | float, sl: int | float):
         """
