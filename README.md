@@ -1,6 +1,6 @@
 <div align="center">
 <h1 align="center">
-<img src="https://raw.githubusercontent.com/PKief/vscode-material-icon-theme/ec559a9f6bfd399b82bb44393651661b08aaf7ba/icons/folder-markdown-open.svg" width="100" />
+<img src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.freepik.com%2Fpremium-vector%2Falpaca-logo-design-vector-illustration_31071157.htm&psig=AOvVaw0nHAut8L3z9ux9X37-6lhv&ust=1704073395101000&source=images&cd=vfe&ved=0CBIQjRxqFwoTCIi12ZzGuIMDFQAAAAAdAAAAABAE" width="100" />
 <br>PAIRS-TRADING-ALGORITHM</h1>
 <h3>◦ Statistical Arbitrage Trading Algorithm</h3>
 <h3>◦ Developed to interact with the ALPACA API with the software and tools below.</h3>
