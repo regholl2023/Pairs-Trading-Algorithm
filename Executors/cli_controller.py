@@ -10,6 +10,7 @@ def main_menu():
     blue_bold_print("2: Current Positions - Live Portfolio")
     blue_bold_print("3: Enter New Hedge Position")
     blue_bold_print("4: Manual Trade")
+    blue_bold_print("5: Backtest Strategy")
     choice = input("Please select an option: ")
     return choice
 
@@ -19,7 +20,7 @@ def main():
     while True:
         try:
             choice = main_menu()
-            if choice not in ["1", "2", "3", "4"]:
+            if choice not in ["1", "2", "3", "4", "5"]:
                 raise ValueError
             elif choice == "1":
                 analysis_executor.run_analysis()
@@ -29,6 +30,8 @@ def main():
                 alpaca_executor.enter_new_hedge_position_menu(alpaca_connection)
             elif choice == "4":
                 alpaca_executor.manual_trade_menu(alpaca_connection)
+            elif choice == "5":
+                analysis_executor.backtest_strategy()
         except ValueError:
             red_bold_print("Invalid input")
         except Exception as e:

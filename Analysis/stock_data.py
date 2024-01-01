@@ -24,12 +24,17 @@ pd.set_option('mode.chained_assignment', None)
 class StockData:
     """ A class for managing and analyzing stock data. """
 
-    def __init__(self, asset_list):
-        """ Initializes the StockData object by downloading stock data, finding high correlation and cointegrated pairs, and determining the most suitable pair for analysis. """
+    def __init__(self, asset_list, bypass_adf_test):
+        """ Initializes the StockData object by downloading stock data, finding high correlation and cointegrated
+        pairs, and determining the most suitable pair for analysis."""
         self.price_history_df = self.download_stock_data(asset_list)
         self.highest_corr_pairs_df = self.find_highest_corr_pairs(self.price_history_df)
         self.co_integrated_pairs_df = self.find_cointegrated_pairs(self.price_history_df, p_value_thresh=0.05)
-        self.co_int_correlation_combined_df = self.combine_cointegration_correlation_adf()
+        self.co_int_correlation_combined_df = self.combine_cointegration_correlation()
+        if bypass_adf_test:
+            self.adf_tested_df = self.co_int_correlation_combined_df
+        else:
+            self.adf_tested_df = self.filter_for_best_pairs()
         self.most_suitable_pair = self.find_most_suitable_pair()
 
     @timeit
@@ -77,20 +82,27 @@ class StockData:
         return cointegrated_pairs_df
 
     @timeit
-    def combine_cointegration_correlation_adf(self) -> pd.DataFrame:
+    def combine_cointegration_correlation(self) -> pd.DataFrame:
         """ Combines cointegration and correlation data into a single DataFrame. """
         coint_corr_data = self.highest_corr_pairs_df.merge(self.co_integrated_pairs_df, left_on='lookup',
                                                            right_on=self.co_integrated_pairs_df.index)
-        coint_corr_data['adf_test'] = run_adf_on_best_pairs(coint_corr_data)
+
+        print(coint_corr_data)
         return coint_corr_data
 
+    def filter_for_best_pairs(self):
+        """ Filters the given DataFrame for the best pairs based on highest correlation and cointegration. """
+        self.co_int_correlation_combined_df['adf_test'] = run_adf_on_best_pairs(self.co_int_correlation_combined_df)
+        filtered_data = self.co_int_correlation_combined_df.query('adf_test == True')
+        filtered_data = filtered_data.sort_values(by=['Correlation', 'Cointegration'], ascending=False)
+        return filtered_data
+
     @timeit
-    def find_most_suitable_pair(self):
+    def find_most_suitable_pair(self) -> list:
         """ Identifies the most suitable stock pair based on highest correlation and cointegration criteria. Raises
         an error if no suitable pairs are found."""
-        if len(self.co_int_correlation_combined_df) < 2:
+        if len(self.adf_tested_df) < 2:
             raise NoSuitablePairsError
-        stock_1 = self.co_int_correlation_combined_df.iloc[0, 0]
-        stock_2 = self.co_int_correlation_combined_df.iloc[0, 1]
-        print('Most Suitable Pair: ' + stock_1 + ' ' + stock_2)
+        stock_1 = self.adf_tested_df.iloc[0, 0]
+        stock_2 = self.adf_tested_df.iloc[0, 1]
         return [stock_1, stock_2]
