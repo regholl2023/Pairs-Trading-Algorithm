@@ -7,3 +7,4 @@ numpy~=1.26.2
 websocket-client~=1.7.0
 scipy~=1.11.4
 alpaca-py
+pynput~=1.7.6

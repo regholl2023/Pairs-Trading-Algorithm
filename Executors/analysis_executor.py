@@ -1,24 +1,18 @@
-import os
 import sys
+from typing import List, Tuple, Optional
 
 from Analysis.statistical_methods import collect_metrics_for_pair
 from Executors.cli_controller import main_menu
 from Analysis.visualisation import spread_visualisation, zscored_spread, visualise_returns
-
-# Get the directory of the current script
-# If the script is not in the root directory, navigate to the root directory
-# Append the root directory to sys.path so that modules can be imported
-current_dir = os.path.dirname(os.path.abspath(__file__))
-root_dir = os.path.dirname(current_dir)
-sys.path.append(root_dir)
-
 from Analysis.errors import NoSuitablePairsError
 from Analysis.stock_data import StockData
 from AidanUtils.formatting_and_logs import green_bold_print, blue_bold_print, red_bold_print
 from AidanUtils.formatting_and_logs import CustomFormatter
 import logging
 
-# Set up logging with custom formatter
+from Trading.alpaca_functions import Alpaca
+
+# Configure logging with a custom formatter
 logging.basicConfig(level=logging.INFO)
 formatter = CustomFormatter('%(asctime)s - %(levelname)s - %(message)s')
 handler = logging.StreamHandler(sys.stdout)
@@ -27,7 +21,14 @@ logger = logging.getLogger()
 logger.handlers = [handler]
 
 
-def read_tickers_from_file(path):
+def read_tickers_from_file(path: str) -> Optional[List[str]]:
+    """
+    Reads ticker symbols from a file and returns them as a list.
+    Args:
+    path (str): File path to read ticker symbols.
+    Returns:
+    Optional[List[str]]: List of ticker symbols, or None if file not found.
+    """
     try:
         with open(path, 'r') as file:
             return [ticker.strip() for ticker in file.read().split(',') if len(ticker.strip()) > 1]
@@ -36,44 +37,90 @@ def read_tickers_from_file(path):
         return None
 
 
-def process_stock_data(symbols_list):
+def process_stock_data(symbols_list: List[str]) -> Optional[Tuple[str, str]]:
+    """
+    Processes stock symbols to find the most suitable pair for analysis.
+    Args:
+    symbols_list (List[str]): List of stock ticker symbols.
+    Returns:
+    Optional[Tuple[str, str]]: Most suitable pair of stocks, or None if no suitable pair is found.
+    """
     try:
         stock_data = StockData(asset_list=symbols_list, bypass_adf_test=False)
         red_bold_print("Most Suitable Pair: " + stock_data.most_suitable_pair)
         return stock_data.most_suitable_pair
     except NoSuitablePairsError:
-        logging.warning("No suitable pairs found in the given list of tickers. Please try again.")
-        logging.warning("Would you like to bypass the adf_test requirement? (y/n)")
-        choice = input()
-        if choice.lower() == 'y':
+        logging.warning("No suitable pairs found. Option to bypass adf_test is available but not recommended (y/n): ")
+        bypass_adf_test = input()
+        if bypass_adf_test.lower() == 'y':
             stock_data = StockData(asset_list=symbols_list, bypass_adf_test=True)
-            red_bold_print("Most Suitable Pair: " + str(stock_data.most_suitable_pair))
+            red_bold_print("Most Suitable Pair: {}, {}".format(stock_data.most_suitable_pair[0], stock_data.most_suitable_pair[1]))
             return stock_data.most_suitable_pair
         else:
-            main_menu()
+            return None
+
+
+
+
     except Exception as e:
         logging.error(f"An error occurred: {e}")
 
 
-def run_analysis():
+def run_analysis() -> None:
+    """
+    Initiates the stock analysis process by reading ticker symbols and processing them.
+    """
     while True:
-        blue_bold_print("Ticker symbols list must be in a csv file.")
-        blue_bold_print("Please enter a path to a csv file containing a list of ticker symbols or enter b to go back:")
-        path = input()
-        if path == 'b':
-            main_menu()
-        symbols_list = read_tickers_from_file(path)
+        try:
+            blue_bold_print("Ticker symbols list must be in a csv file.")
+            blue_bold_print("Please enter a path to a csv file containing a list of ticker symbols or enter b to go "
+                            "back:")
+            path = input()
+            if path == 'b':
+                main_menu(alpaca=Alpaca())
+            symbols_list = read_tickers_from_file(path)
 
-        if symbols_list is not None:
-            logging.info("Tickers to analyse: " + str(symbols_list))
-            most_suitable_pair = process_stock_data(symbols_list)
-            strategy_info = collect_metrics_for_pair(most_suitable_pair[0], most_suitable_pair[1])
-            print(strategy_info)
+            if symbols_list is not None:
+                logging.info("Tickers to analyse: " + str(symbols_list))
+                most_suitable_pair = process_stock_data(symbols_list)
+                strategy_info = collect_metrics_for_pair(most_suitable_pair[0], most_suitable_pair[1])
+                print(strategy_info)
+                hedge_ratio = strategy_info['hedge_ratio'].iloc[0]
+                print("Hedge Ratio: " + str(hedge_ratio))
+                red_bold_print("Would you like to enter a hedge position using this pair? (y/n)")
+                choice = input()
+                if choice.lower() == "y":
+                    try:
+                        alpaca = Alpaca()
+                        leverage = float(input("Please enter the leverage: "))
+                        tp_sl = input("Please enter the take profit and stop loss percentage in the format 0.05, 0.05: ")
+                        tp, sl = tp_sl.split(',')
+                        tp, sl = float(tp.strip()), float(sl.strip())
+                        alpaca.enter_hedge_position(most_suitable_pair[0], most_suitable_pair[1],
+                                                    side="buy", hr=hedge_ratio, leverage=leverage)
+                        logging.info("Hedge position entered.")
+                        alpaca.use_live_tp_sl(tp, sl)
+                        break
+                    except Exception as e:
+                        print(e)
+                else:
+                    break
             break
+        except Exception as e:
+            print(e)
 
 
-def backtest_strategy():
-    def backtest_menu():
+def backtest_strategy() -> None:
+    """
+    Backtests a trading strategy based on user choices and stock pairs.
+    """
+
+    def backtest_menu() -> str:
+        """
+        Shows backtest options and returns user choice.
+        Returns:
+        str: User's menu choice.
+        """
         blue_bold_print("1: Visualise Spread")
         blue_bold_print("2: Visualise Z-Scored Spread")
         blue_bold_print("3: Visualise Returns")

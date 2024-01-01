@@ -16,7 +16,6 @@ from Trading.alpaca_functions import Alpaca
 def live_position_menu(alpaca: Alpaca):
     try:
         blue_bold_print("Current Positions - Live Portfolio")
-
         alpaca.live_profit_monitor()
     except Exception as e:
         print(e)

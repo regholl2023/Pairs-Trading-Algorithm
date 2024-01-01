@@ -81,12 +81,17 @@ def adf_test(stock_1, stock_2) -> bool:
 
 @timeit
 def run_adf_on_best_pairs(highest_corr_pairs) -> list:
-    """
-    Applies the ADF test on pairs of stocks with the highest correlation.
-    Returns a list of results indicating whether each pair's spread is stationary.
-    """
-    adf_list = []
-    for n in range(len(highest_corr_pairs)):
-        result = adf_test(highest_corr_pairs['Stock_1'][n], highest_corr_pairs['Stock_2'][n])
-        adf_list.append(result)
-    return adf_list
+    try:
+        """
+        Applies the ADF test on pairs of stocks with the highest correlation.
+        Returns a list of results indicating whether each pair's spread is stationary.
+        """
+        adf_list = []
+        if len(highest_corr_pairs) != 0:
+            for n in range(len(highest_corr_pairs)):
+                result = adf_test(highest_corr_pairs['Stock_1'][n], highest_corr_pairs['Stock_2'][n])
+                adf_list.append(result)
+            return adf_list
+    except Exception as e:
+        print(e)
+        return []

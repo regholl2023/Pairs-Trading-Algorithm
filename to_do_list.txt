@@ -3,3 +3,7 @@ Ability to enter more than one position at a time
 Manually close a position
 Ability to auto enter a position in all sufficient pairs
 Filter for pairs that are most suitable
+
+
+Fix bug where the bot will not enter a position because fractional shares cannot be sold short -
+Need methods for deciding how big the position should be

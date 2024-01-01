@@ -1,12 +1,16 @@
-import Executors.analysis_executor
+import sys
+
 from Trading.alpaca_functions import Alpaca
-from AidanUtils.formatting_and_logs import green_bold_print, blue_bold_print, red_bold_print
+from AidanUtils.formatting_and_logs import green_bold_print, blue_bold_print, red_bold_print, emphasis_bold_red_print
 from Executors import analysis_executor
 from Executors import alpaca_executor
 
 
-def main_menu():
-    blue_bold_print("1: Run Analysis")
+def main_menu(alpaca: Alpaca):
+    # new line
+    sys.stdout.write("\n")
+    emphasis_bold_red_print("Main Menu | " + "Alpaca Balance: $" + str(alpaca.account.buying_power))
+    blue_bold_print("1: Run Analysis - Find Suitable Pair")
     blue_bold_print("2: Current Positions - Live Portfolio")
     blue_bold_print("3: Enter New Hedge Position")
     blue_bold_print("4: Manual Trade")
@@ -19,7 +23,7 @@ def main():
     alpaca_connection = Alpaca()
     while True:
         try:
-            choice = main_menu()
+            choice = main_menu(alpaca=alpaca_connection)
             if choice not in ["1", "2", "3", "4", "5"]:
                 raise ValueError
             elif choice == "1":

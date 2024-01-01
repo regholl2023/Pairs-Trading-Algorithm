@@ -1,6 +1,5 @@
 import os
 import sys
-import threading
 import time
 import logging
 
@@ -18,7 +17,6 @@ from alpaca.trading import OrderSide, TimeInForce, PositionSide, Position
 from alpaca.trading.client import TradingClient
 from alpaca.trading.requests import MarketOrderRequest, LimitOrderRequest
 from alpaca.trading.stream import TradingStream
-from AidanUtils.MyTimer import timeit
 
 os.environ['APCA_API_BASE_URL'] = 'https://paper-api.alpaca.markets'
 
@@ -57,11 +55,11 @@ class Alpaca:
         and sets up trading stream.
         """
         self.connected = False
-        self.account = None
         self.client = self.connect_to_alpaca("PKNWSWFGL7X6F50PJ8UH", "1qpcAmhEmzxONh3Im0V6lzgqtVOX2xD3k7mViYLX",
                                              paper=True)
         self.in_position = bool(self.client.get_all_positions())
         self.positions = self.client.get_all_positions()
+        self.balance = self.account.buying_power
 
     def connect_to_alpaca(self, api_key: str, api_secret: str, paper: bool) -> TradingClient:
         """
@@ -327,10 +325,7 @@ class Alpaca:
             # Assembling the table
             return f"{header}\n{separator}\n{df_string}"
 
-        count = 0
-
-        BLUE_BOLD = '\033[94m\033[1m'
-        RESET = '\033[0m'
+        count = 15
 
         while True:
             try:
@@ -339,9 +334,12 @@ class Alpaca:
                 output = f'{count} Current Profit: {self.get_unrealised_profit_pc()} %'
                 sys.stdout.write("\r" + output + " -> Positions: ")  # Overwrite the line with padding
                 sys.stdout.write(table)  # Overwrite the line with padding
-                time.sleep(5)
-                count += 1
+                time.sleep(1)
+                count -= 1
                 sys.stdout.flush()
+                if count < 0:
+                    sys.stdout.flush()
+                    break
 
             except Exception as e:
                 print(f"An error occurred: {e}")
@@ -349,7 +347,8 @@ class Alpaca:
 
     def use_live_tp_sl(self, tp: int | float, sl: int | float):
         """
-        Continuously monitors the portfolio for take profit (tp) or stop loss (sl) conditions.
+        Continuously monitors the portfolio for take profit (tp)
+         or stop loss (sl) conditions.
         Prints the current unrealized profit percentage and executes orders if conditions are met.
 
         Args:
