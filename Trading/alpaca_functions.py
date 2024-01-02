@@ -98,7 +98,7 @@ class Alpaca:
         try:
             self.client.submit_order(
                 order_data=MarketOrderRequest(
-                    symbol=symbol,
+                    symbol=symbol.upper(),
                     qty=qty,
                     side=side,
                     time_in_force=TimeInForce.DAY
@@ -124,7 +124,7 @@ class Alpaca:
         try:
             self.client.submit_order(
                 order_data=LimitOrderRequest(
-                    symbol=symbol,
+                    symbol=symbol.upper(),
                     qty=qty,
                     side=side,
                     limit_price=limit_price,
