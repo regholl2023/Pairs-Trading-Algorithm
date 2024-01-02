@@ -8,16 +8,16 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 root_dir = os.path.dirname(current_dir)
 sys.path.append(root_dir)
 
-from Analysis.statistical_methods import collect_metrics_for_pair
-from Executors.cli_controller import main_menu
-from Analysis.visualisation import spread_visualisation, zscored_spread, visualise_returns
-from Analysis.errors import NoSuitablePairsError
-from Analysis.stock_data import StockData
-from AidanUtils.formatting_and_logs import green_bold_print, blue_bold_print, red_bold_print
-from AidanUtils.formatting_and_logs import CustomFormatter
+from analysis.statistical_methods import collect_metrics_for_pair
+from executors.cli_controller import main_menu
+from analysis.visualisation import spread_visualisation, zscored_spread, visualise_returns
+from analysis.errors import NoSuitablePairsError
+from analysis.stock_data import StockData
+from utils.formatting_and_logs import green_bold_print, blue_bold_print, red_bold_print
+from utils.formatting_and_logs import CustomFormatter
 import logging
 
-from Trading.alpaca_functions import Alpaca
+from trading.alpaca_functions import Alpaca
 
 # Configure logging with a custom formatter
 logging.basicConfig(level=logging.INFO)

@@ -12,11 +12,11 @@ root_dir = os.path.dirname(current_dir)
 sys.path.append(root_dir)
 
 # Custom Module Imports
-from AidanUtils.MyTimer import timeit
-from Analysis.DATES import Dates
-from Analysis.errors import NoSuitablePairsError
-from AidanUtils.formatting_and_logs import blue_bold_print, green_bold_print
-from Analysis.statistical_methods import run_adf_on_best_pairs
+from utils.my_timer import timeit
+from analysis.DATES import Dates
+from analysis.errors import NoSuitablePairsError
+from utils.formatting_and_logs import blue_bold_print, green_bold_print
+from analysis.statistical_methods import run_adf_on_best_pairs
 
 pd.set_option('mode.chained_assignment', None)
 

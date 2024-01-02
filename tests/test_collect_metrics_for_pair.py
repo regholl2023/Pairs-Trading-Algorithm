@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 import pandas as pd
-from Analysis.statistical_methods import collect_metrics_for_pair
+from analysis.statistical_methods import collect_metrics_for_pair
 import warnings
 
 no_df_result = "result is not a DataFrame"

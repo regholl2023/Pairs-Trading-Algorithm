@@ -1,7 +1,7 @@
 import os
 import sys
 
-from AidanUtils.formatting_and_logs import blue_bold_print
+from utils.formatting_and_logs import blue_bold_print
 
 # Get the directory of the current script
 # If the script is not in the root directory, navigate to the root directory
@@ -10,7 +10,7 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 root_dir = os.path.dirname(current_dir)
 sys.path.append(root_dir)
 
-from Trading.alpaca_functions import Alpaca
+from trading.alpaca_functions import Alpaca
 
 
 def live_position_menu(alpaca: Alpaca):

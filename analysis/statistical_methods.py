@@ -15,8 +15,8 @@ root_dir = os.path.dirname(current_dir)
 sys.path.append(root_dir)
 
 # Custom Module Imports
-from AidanUtils.MyTimer import timeit
-from Analysis.DATES import Dates
+from utils.my_timer import timeit
+from analysis.DATES import Dates
 
 
 def collect_metrics_for_pair(stock_1, stock_2) -> pd.DataFrame:
@@ -63,7 +63,7 @@ def collect_metrics_for_pair(stock_1, stock_2) -> pd.DataFrame:
         else:
             return 0
 
-    # Trading Signal
+    # trading Signal
     stock_data_df['signal'] = stock_data_df.apply(classify_zscore, axis=1)
 
     return stock_data_df.dropna()

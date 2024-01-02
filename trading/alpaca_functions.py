@@ -3,7 +3,7 @@ import sys
 import time
 import logging
 
-from AidanUtils.formatting_and_logs import green_bold_print, red_bold_print
+from utils.formatting_and_logs import green_bold_print, red_bold_print
 
 # Get the directory of the current script
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -26,7 +26,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 
 def connect_to_trading_stream():
     """
-    Connects to the Alpaca Trading Stream using predefined API credentials.
+    Connects to the Alpaca trading Stream using predefined API credentials.
     Returns a TradingStream object if successful, else prints an error message.
     """
     try:

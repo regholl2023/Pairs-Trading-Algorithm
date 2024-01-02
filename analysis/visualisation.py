@@ -10,7 +10,7 @@ sys.path.append(root_dir)
 
 import numpy as np
 from matplotlib import pyplot as plt
-from Analysis.statistical_methods import collect_metrics_for_pair
+from analysis.statistical_methods import collect_metrics_for_pair
 
 
 def get_tickers_from_collected_data_df(df) -> (str, str):
@@ -52,7 +52,7 @@ def visualise_returns(df, tp, sl):
         else:
             return 0
 
-    # Trading Signal
+    # trading Signal
     df['signal'] = df.apply(check_strategy_signal, axis=1)
     df['strategy_return'] = df[f'{stock_1}_forward_return'] * df['signal'] + \
                             df[f'{stock_2}_forward_return'] * df['signal'] * -df['hedge_ratio']

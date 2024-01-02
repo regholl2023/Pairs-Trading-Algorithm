@@ -59,25 +59,25 @@ The algorithm is configured to use my ALPACA paper account API key and secret.
 ## 📂 Repository Structure
 
 ```sh
-└── Pairs-Trading-Algorithm/
-    ├── AidanUtils/
-    │   ├── MyTimer.py
+└── Pairs-trading-Algorithm/
+    ├── utils/
+    │   ├── my_timer.py
     │   ├── ProgressBar.py
     │   ├── formatting_and_logs.py
-    ├── Analysis/
+    ├── analysis/
     │   ├── DATES.py
     │   ├── errors.py
     │   ├── statistical_methods.py
     │   ├── stock_data.py
     │   └── visualisation.py
-    ├── Executors/
+    ├── executors/
     │   ├── alpaca_executor.py
     │   ├── analysis_executor.py
     │   └── cli_controller.py
-    ├── Tests/
+    ├── tests/
     │   ├── test_alpaca.py
     │   └── test_collect_metrics_for_pair.py
-    ├── Trading/
+    ├── trading/
     │   └── alpaca_functions.py
     ├── requirements.txt
     └── to_do_list.txt
@@ -156,7 +156,7 @@ git clone https://github.com/AidanAlr/Pairs-Trading-Algorithm
 
 2. Change to the project directory:
 ```sh
-cd Pairs-Trading-Algorithm
+cd Pairs-trading-Algorithm
 ```
 
 3. Install the dependencies:
@@ -167,7 +167,7 @@ pip install -r requirements.txt
 ### 🤖 Running Program
 1. Change to the Executors directory:
 ```sh
-cd Pairs-Trading-Algorithm/Executors
+cd Pairs-trading-Algorithm/executors
 ```
 
 
